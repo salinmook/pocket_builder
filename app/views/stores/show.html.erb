@@ -1,0 +1,12 @@
+<h1><%= @store.name %></h1>
+<p><%= @store.description %></h1>
+<p>Theme: <%= @store.theme %></p>
+
+<%= link_to "Edit", edit_store_path(@store) %>
+<%= link_to "Delete", store_path(@store),
+data: {
+turbo_method: :delete,
+turbo_confirm: "Delete this store?"
+} %>
+
+<%= link_to "Back to homepage", root_path %>
