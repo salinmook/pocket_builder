@@ -1,0 +1,7 @@
+<h1>Edit category</h1>
+<%= form_with model: [@store, @category] do |f| %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+
+    <%= f.submit "Update Category" %>
+    <% end %>

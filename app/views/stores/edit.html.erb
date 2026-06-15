@@ -7,7 +7,54 @@
     <%= f.text_area :description %>
 
     <%= f.label :theme %>
-    <%= f.text_field :theme %>
+    <%= f.select :theme,
+    [
+        ["Sidebar Menu", "sidebar"],
+        ["Top menu", "topbar"],
+        ["Grid Menu", "grid"]
+    ] %>
+
+    <%= f.label :primary_color %>
+    <%= f.color_field :primary_color, value: @store.primary_color || "#ff6600" %>
+
+    <%= f.label :font_family %>
+    <%= f.select :font_family,
+    [
+        ["Poppins", "Poppins"],
+        ["Roboto", "Roboto"],
+        ["Inter", "Inter"],
+        ["Open Sans", "Open Sans"],
+        ["Lato", "Lato"],
+        ["Montserrat", "Montserrat"],
+        ["Oswald", "Oswald"],
+        ["Merriweather", "Merriweather"],
+        ["Playfair Display", "Playfair Display"]
+    ] %>
+
+    <%= f.label :logo %>
+     <% if @store.logo.attached? %>
+      <p>Current Logo</p>
+      <%= image_tag @store.logo, width:120 %>
+      <%=  link_to "Remove Logo", remove_logo_store_path(@store),
+      data: {
+      turbo_method: :delete,
+      turbo_confirm: "Delete logo?"
+      } %>
+    <% end %>
+    <%= f.file_field :logo %>
+
+    <%= f.label :banner %>
+    <% if @store.banner.attached? %>
+      <p>Current Banner</p>
+      <%= image_tag @store.banner, width:300 %>
+      <%= link_to "Remove Banner", remove_banner_store_path(@store),
+      data: {
+      turbo_method: :delete,
+      turbo_confirm: "Delete Banner?"
+      } %>
+    <% end %>
+    <%= f.file_field :banner %>
+
 
     <%= f.submit %>
     <% end %>

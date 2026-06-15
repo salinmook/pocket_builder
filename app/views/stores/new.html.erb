@@ -7,7 +7,36 @@
     <%= f.text_area :description %>
 
     <%= f.label :theme %>
-    <%= f.text_field :theme %>
+    <%= f.select :theme,
+    [
+        ["Sidebar Menu", "sidebar"],
+        ["Top menu", "topbar"],
+        ["Grid Menu", "grid"]
+    ] %>
+
+    <%= f.label :primary_color %>
+    <%= f.color_field :primary_color, value: @store.primary_color || "#ff6600" %> 
+
+    <%= f.label :font_family %>
+    <%== f.select :font_family,
+    [
+        ["Poppins", "Poppins"],
+        ["Roboto", "Roboto"],
+        ["Inter", "Inter"],
+        ["Open Sans", "Open Sans"],
+        ["Lato", "Lato"],
+        ["Montserrat", "Montserrat"],
+        ["Oswald", "Oswald"],
+        ["Merriweather", "Merriweather"],
+        ["Playfair Display", "Playfair Display"]
+    ] %>
+
+    <%= f.label :logo %>
+    <%= f.file_field :logo %>
+
+    <%= f.label :banner %>
+    <%= f.file_field :banner %>
+
 
     <%= f.submit %>
     <% end %>

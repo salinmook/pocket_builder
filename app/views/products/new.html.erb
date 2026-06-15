@@ -1,0 +1,22 @@
+<h1>Add product </h1>  
+<%= form_with model: [@store, @product] do |f| %>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+
+    <%= f.label :price %>
+    <%= f.number_field :price, step:0.01 %>
+
+    <%= f.label :stock %>
+    <%= f.number_field :stock %>
+
+    <%= f.label :image %>
+    <%= f.file_field :images, multiple:true %>
+
+    <%= f.label :category %>
+    <%= f.collection_select(:category_id, @store.categories, :id, :name) %>
+
+    <%= f.submit "Create Product" %>
+    <% end %>

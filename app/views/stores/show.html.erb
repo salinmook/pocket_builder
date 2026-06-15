@@ -1,5 +1,71 @@
-<h1><%= @store.name %></h1>
-<p><%= @store.description %></h1>
+<% if @store.theme == "topbar" %>
+<nav>
+    <%= link_to "Home", store_path(@store) %> |
+    <details style="display:inline-block;">
+      <summary>Products</summary>
+      <% @store.categories.each do |category| %>
+        <div>
+            <a href="#<%= category.name.parameterize %>">
+            <%= category.name %></a>
+        </div>
+      <% end %>
+    </details> |
+    <a href="#contact">Contact Us</a> |
+    <a href="#faq">FAQ</a>
+</nav>
+<% elsif @store.theme == "grid" %>
+<div>
+  <a href="#">Home</a>
+    <details style="display:inline-block;">
+    <summary>Product</summary>
+      <% @store.categories.each do |category| %>
+        <div>
+        <a href="#<%= category.name.parameterize %>">
+          <%= category.name %></a>
+        </div>
+      <% end %>
+    </details>
+    <a href="#contact">Contact Us</a>
+    <a href="#faq">FAQ</a>
+
+</div>
+<% else %>
+<details>
+    <summary>Menu</summary>
+    <ul>
+        <li><%= link_to "Home", store_path(@store) %></li>
+        <li>
+        <details>
+         <summary>Product</summary>
+         <% @store.categories.each do |category| %>
+             <div>
+              <a href="#<%= category.name.parameterize %>">
+                 <%= category.name %>
+              </a>
+             </div>
+         <% end %>
+        </details></li>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="#faq">FAQ</a></li>
+    </ul>
+</details>
+
+<% end %>
+
+<hr>
+
+<% if @store.banner.attached? %>
+    <%= image_tag @store.banner, width:1000 %>
+<% end %>
+
+<% if @store.logo.attached? %>
+    <%= image_tag @store.logo, width:120 %>
+<% end %>
+
+<h1 style="color: <%= @store.primary_color %>; 
+font-family: <%= @store.font_family %>;"><%= @store.name %></h1>
+<p style="color: <%= @store.primary_color %>; 
+font-family: <%= @store.font_family %>;"><%= @store.description %></p>
 <p>Theme: <%= @store.theme %></p>
 
 <%= link_to "Edit", edit_store_path(@store) %>
@@ -8,5 +74,77 @@ data: {
 turbo_method: :delete,
 turbo_confirm: "Delete this store?"
 } %>
+
+<%= link_to "Add Category", new_store_category_path(@store) %>
+
+<%= link_to "Add Product", new_store_product_path(@store),
+style: "background-color: #{@store.primary_color};
+color: white;
+padding: 10px;
+text-decoration: none;" %>
+
+<%= form_with url: store_path(@store),
+method: :get,
+local: true do |f| %>
+    <%= f.text_field :query,
+    value: params[:query],
+    placeholder: "Search product..." %>
+    <%= f.submit "Search" %>
+<% end %>
+
+<% if params[:query].present? %>
+    <h3> Search Result</h3>
+    <% if @products.any? %>
+        <% @products.each do |product| %>
+            <p><%= link_to product.title, store_product_path(@store,product) %></p>
+        <% end %>
+        <% else %>
+        <p> No product found </p>
+    <% end %>
+<% end %>
+
+<h2 id="products">Products</h2>
+<% @store.categories.each do |category| %>
+    <h3 id="<%= category.name.parameterize %>"><%= category.name %></h3>
+    <%= link_to "Edit Category", edit_store_category_path(@store, category) %>
+    <%= button_to "Delete Category", store_category_path(@store, category),
+    method: :delete,
+    data: {
+    turbo_confirm: "Delete this category?"
+    } %>
+    <% category.products.each do |product| %>
+    <div style="border:1px solid #ddd; padding:15px; margin-bottom:20px; border-radius:10px;">
+        <% if product.images.attached? %>
+            
+                    <%= image_tag product.images.first, width: 200 %>
+               
+        
+        <% end %>
+    
+        <h4><%= link_to product.title, store_product_path(@store, product) %></h4>
+        
+        <p><%= product.description %></p>
+        <p>€<%= product.price %></p>
+        <p>Stock: <%= product.stock %></p>
+    
+        <%= link_to "Edit", edit_store_product_path(@store, product) %>
+    </div>
+
+    <%= button_to "Delete", store_product_path(@store, product),
+        method: :delete,
+        data: {
+        turbo_confirm: "Delete this product?"
+        } %>
+     <hr>
+    <% end %>
+<% end %>
+<hr>
+<h2 id="contact">Contact Us</h2>
+<p><%= @store.address %></p>
+<p><%= @store.phone %></p>
+<hr>
+
+<h2 id="faq">FAQ</h2>
+<p>Frequently Asked Questions will appear here.</p>
 
 <%= link_to "Back to homepage", root_path %>

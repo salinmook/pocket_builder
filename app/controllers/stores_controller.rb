@@ -35,13 +35,31 @@ class StoresController < ApplicationController
 
 
     def show
-        @store = current_user.stores.find(params[:id])
+        @store = Store.find(params[:id])
+        if params[:query].present?
+            @products = @store.products.where("title ILIKE ?",
+            "%#{params[:query]}%")
+        else
+            @products = @store.products
+        end
     end
 
     def destroy 
         @store = current_user.stores.find(params[:id])
         @store.destroy
         redirect_to stores_path
+    end
+
+    def remove_logo
+        @store = current_user.stores.find(params[:id])
+        @store.logo.purge if @store.logo.attached?
+        redirect_to edit_store_path(@store), notice: "Logo removed"
+    end
+
+    def remove_banner
+        @store = current_user.stores.find(params[:id])
+        @store.banner.purge if @store.banner.attached?
+        redirect_to edit_store_path(@store), notice: "Banner removed"
     end
 
     private
@@ -53,7 +71,12 @@ class StoresController < ApplicationController
             :address,
             :phone,
             :instagram,
-            :facebook
+            :facebook,
+            :logo,
+            :banner,
+            :primary_color,
+            :active,
+            :font_family
         )
     end
 end
