@@ -1,0 +1,71 @@
+<% store = current_store %>
+<% return unless store %>
+<% cart = Cart.find_or_create_by(store: store) %>
+  <% if store.theme == "topbar" %>
+    <nav>
+        <%= link_to "Home", store_path(store) %> |
+        <details style="display:inline-block;">
+          <summary>Products</summary>
+          <% store.categories.each do |category| %>
+            <div>
+              <a href="#<%= category.name.parameterize %>">
+                <%= category.name %>
+              </a>
+            </div>
+          <% end %>
+        </details> |
+
+        <%= link_to "Cart", cart_path(cart) if cart %> |
+        <%= link_to "My Orders", orders_path %> |
+        <a href="#contact">Contact Us</a> |
+        <a href="#faq">FAQ</a>
+    </nav>
+
+  <% elsif store.theme == "grid" %>
+    <div>
+      <%= link_to "Home", store_path(store) %>
+
+      <details style="display:inline-block;">
+        <summary>Product</summary>
+        <% store.categories.each do |category| %>
+          <div>
+            <a href="#<%= category.name.parameterize %>">
+              <%= category.name %>
+            </a>
+          </div>
+        <% end %>
+      </details>
+
+      <button onclick="location.href='<%= cart_path(cart) %>'">Cart</button>
+      <button onclick="location.href='<%= orders_path %>'">My Orders</button>
+      <a href="#contact">Contact Us</a>
+      <a href="#faq">FAQ</a>
+    </div>
+
+  <% else %>
+    <details>
+      <summary>Menu</summary>
+      <ul>
+        <li><%= link_to "Home", store_path(store) %></li>
+
+        <li>
+          <details>
+            <summary>Product</summary>
+            <% store.categories.each do |category| %>
+              <div>
+                <a href="#<%= category.name.parameterize %>">
+                  <%= category.name %>
+                </a>
+              </div>
+            <% end %>
+          </details>
+        </li>
+
+        <li><%= link_to "Cart", cart_path(cart) if cart %></li>
+        <li><%= link_to "My Orders", orders_path %></li>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </details>
+  <% end %>
+

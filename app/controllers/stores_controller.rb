@@ -36,6 +36,7 @@ class StoresController < ApplicationController
 
     def show
         @store = Store.find(params[:id])
+        session[:store_id] = @store.id
         if params[:query].present?
             @products = @store.products.where("title ILIKE ?",
             "%#{params[:query]}%")

@@ -1,0 +1,21 @@
+<h1>Dashboard</h1>
+<h2>Statistics</h2>
+<p>Total Products: <%= @products.count %></p>
+<p>Total Orders: <%= @total_orders %></p>
+<p>Pending Orders: <%= @pending_orders %><p>
+<p>Cancelled Orders: <%= @cancelled_orders %></p>
+<p>Revenue: €<%= @revenue %></p>
+<hr>
+
+<h2>Products</h2>
+<% @products.each do |product| %>
+    <div style="border:1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+        <strong><%= product.title %></strong>
+        <br>
+        Price: €<%= product.price %>
+        <br>
+        Stock: <%= product.stock %>
+        <br><br>
+        <%= link_to "Edit", edit_store_product_path(@store, product) %>
+    </div>
+<% end %>

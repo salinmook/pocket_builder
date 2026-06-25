@@ -2,6 +2,7 @@ class Product < ApplicationRecord
   belongs_to :store
   belongs_to :category, optional: true
   has_many_attached :images
+  has_many :cart_items, dependent: :destroy
 
   validates :title, presence: true
   validates :price, presence: true

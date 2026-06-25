@@ -1,8 +1,14 @@
 <h1>My Stores</h1>
 <% @stores.each do |store| %>
-    <p>
-        <%= link_to store.name, store_path(store) %>
-    </p>
+    <div>
+        <h3><%= store.name %></h3>
+        <%= link_to "View Store", store_path(store) %>
+        <%= link_to "dashboard", store_dashboard_path(store) %>
+        <%= link_to "Edit", edit_store_path(store) %>
+    </div>
+
     <% end %>
+
+    
 
     <%= link_to "Create Store", new_store_path %>
