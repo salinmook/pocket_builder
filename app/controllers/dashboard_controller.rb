@@ -8,6 +8,8 @@ class DashboardController < ApplicationController
     @orders = @store.orders
     @total_orders = @orders.count
     @pending_orders = @orders.where(status: "pending").count
+    @shipped_orders = @orders.where(status:"shipped").count
+    @completed_orders = @orders.where(status:"completed").count
     @cancelled_orders = @orders.where(status: "cancelled").count
     @revenue = @orders.where.not(status: "cancelled").sum do |order|
       order.product.price * order.quantity
@@ -15,7 +17,9 @@ class DashboardController < ApplicationController
     
   end
 
+  private
+
   def ensure_owner
-    redirect_to root_path unless current_user.ensure_owner?
-    ebd
+    redirect_to root_path unless current_user.owner?
+  end
 end

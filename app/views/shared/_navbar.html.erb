@@ -4,6 +4,7 @@
   <% if store.theme == "topbar" %>
     <nav>
         <%= link_to "Home", store_path(store) %> |
+        <%= link_to "About Us", about_store_path(store) %> |
         <details style="display:inline-block;">
           <summary>Products</summary>
           <% store.categories.each do |category| %>
@@ -17,13 +18,16 @@
 
         <%= link_to "Cart", cart_path(cart) if cart %> |
         <%= link_to "My Orders", orders_path %> |
-        <a href="#contact">Contact Us</a> |
-        <a href="#faq">FAQ</a>
+        <%= link_to "Contact Us", contact_store_path(store) %> |
+        <%= link_to "FAQ", faq_store_path(store) %>
     </nav>
 
   <% elsif store.theme == "grid" %>
     <div>
-      <%= link_to "Home", store_path(store) %>
+      
+      <button onclick="location.href='<%= store_path(store) %>'">Home</button>
+      <button onclick="location.href='<%= about_store_path(store) %>'">About Us</button>
+     
 
       <details style="display:inline-block;">
         <summary>Product</summary>
@@ -38,8 +42,9 @@
 
       <button onclick="location.href='<%= cart_path(cart) %>'">Cart</button>
       <button onclick="location.href='<%= orders_path %>'">My Orders</button>
-      <a href="#contact">Contact Us</a>
-      <a href="#faq">FAQ</a>
+      <button onclick="location.href='<%= contact_store_path(store) %>'">Contact us</button>
+      <button onclick="location.href='<%= faq_store_path(store) %>'">FAQ</button>
+      
     </div>
 
   <% else %>
@@ -47,6 +52,7 @@
       <summary>Menu</summary>
       <ul>
         <li><%= link_to "Home", store_path(store) %></li>
+        <li><%= link_to "About Us", about_store_path(store) %></li>
 
         <li>
           <details>
@@ -63,8 +69,9 @@
 
         <li><%= link_to "Cart", cart_path(cart) if cart %></li>
         <li><%= link_to "My Orders", orders_path %></li>
-        <li><a href="#contact">Contact Us</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><%= link_to "Contact Us", contact_store_path(store) %></li>
+        <li><%= link_to "FAQ", faq_store_path(store) %></li>
+        
       </ul>
     </details>
   <% end %>

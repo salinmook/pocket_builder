@@ -9,15 +9,21 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
   root "pages#home"
+   
   resources :orders, only: [:index, :show] do
     member do
       patch :cancel
+      patch :ship
+      patch :complete
     end
   end
   resources :stores do
     member do
       delete :remove_logo 
       delete :remove_banner
+      get :about
+      get :faq
+      get :contact
     end
     
     resources :categories
@@ -42,6 +48,8 @@ Rails.application.routes.draw do
   get "store/:store_id/order_success",
   to: "orders#success", 
   as: :order_success
+
+ 
 
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

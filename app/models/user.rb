@@ -4,4 +4,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_many :stores, dependent: :destroy
+
+  def owner?
+    role == "owner"
+  end
+
+  def customer?
+    role == "customer"
+  end
 end

@@ -52,4 +52,17 @@ class OrdersController < ApplicationController
         redirect_to orders_path, notice: "Order cancelled"
     end
 
+    def ship
+        @order = Order.find(params[:id])
+        @order.update(status:"shipped")
+        redirect_back fallback_location: orders_path
+    end
+
+    def complete
+        @order = Order.find(params[:id])
+        @order.update(status:"completed")
+        redirect_back fallback_location: orders_path
+    end
+        
+
 end

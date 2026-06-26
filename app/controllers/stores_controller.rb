@@ -63,6 +63,18 @@ class StoresController < ApplicationController
         redirect_to edit_store_path(@store), notice: "Banner removed"
     end
 
+    def about
+        @store = Store.find(params[:id])
+    end
+
+    def faq
+        @store = Store.find(params[:id])
+    end
+
+    def contact
+        @store = Store.find(params[:id])
+    end
+
     private
     def store_params
         params.require(:store).permit(
