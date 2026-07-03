@@ -9,9 +9,9 @@
           <summary>Products</summary>
           <% store.categories.each do |category| %>
             <div>
-              <a href="#<%= category.name.parameterize %>">
+              <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
                 <%= category.name %>
-              </a>
+              
             </div>
           <% end %>
         </details> |
@@ -33,9 +33,9 @@
         <summary>Product</summary>
         <% store.categories.each do |category| %>
           <div>
-            <a href="#<%= category.name.parameterize %>">
+            <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
               <%= category.name %>
-            </a>
+            
           </div>
         <% end %>
       </details>
@@ -59,9 +59,9 @@
             <summary>Product</summary>
             <% store.categories.each do |category| %>
               <div>
-                <a href="#<%= category.name.parameterize %>">
+                <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
                   <%= category.name %>
-                </a>
+                
               </div>
             <% end %>
           </details>

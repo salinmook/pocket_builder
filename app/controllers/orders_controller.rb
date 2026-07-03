@@ -55,13 +55,13 @@ class OrdersController < ApplicationController
     def ship
         @order = Order.find(params[:id])
         @order.update(status:"shipped")
-        redirect_back fallback_location: orders_path
+        redirect_back fallback_location: orders_path, notice: "Order shipped"
     end
 
     def complete
         @order = Order.find(params[:id])
         @order.update(status:"completed")
-        redirect_back fallback_location: orders_path
+        redirect_back fallback_location: orders_path, notice: "Order completed"
     end
         
 

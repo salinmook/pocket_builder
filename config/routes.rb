@@ -37,6 +37,9 @@ Rails.application.routes.draw do
   get "/stores/:store_id/dashboard", 
   to: "dashboard#index",
   as: :store_dashboard
+  get "/stores/:store_id/dashboard/orders",
+  to: "dashboard#orders",
+  as: :store_dashboard_orders
   resources :cart_items do 
     member do
       patch :increase

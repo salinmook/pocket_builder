@@ -1,0 +1,37 @@
+<%= turbo_frame_tag "cart" do %>
+    <h1>Your Cart</h1>
+    <% cart.cart_items.includes(:product).each do |item| %>
+        <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px;">
+        <h3><%= item.product.title %></h3>
+        <p>Price: €<%= item.product.price %></p>
+        <p>Quantity: <%= item.quantity %></p>
+        <p>Total: €<%= item.product.price * item.quantity %></p>
+
+        <%= button_to "+", increase_cart_item_path(item),
+        method: :patch %>
+
+        <%= button_to "-", decrease_cart_item_path(item),
+        method: :patch %>
+
+        <%= button_to "Delete", cart_item_path(item),
+        method: :delete,
+        data: {
+            turbo_confirm: "Remove item?" 
+            } %>
+        </div>
+    <% end %>
+    <% total = cart.cart_items.sum { |item| item.product.price * item.quantity } %>
+
+    <h2>Total Cart: €<%= total %></h2>
+    <% if cart.cart_items.any? %>
+        <%= button_to "Checkout", checkout_path,
+        method: :post,
+        data: {
+            turbo_confirm: "Confirm order?",
+            turbo_frame: "_top"
+        } %>
+    <% else %>
+        <p>Your cart is empty</p>
+    <% end %>
+<% end %>
+

@@ -1,0 +1,86 @@
+<h1>Orders</h1>
+<h2>Pending Orders</h2>
+<table>
+<tr>
+<th>ID</th>
+<th>Date</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Toatl</th>
+<th>Status</th>
+</tr>
+
+<% @pending_orders.each do |order| %>
+    <tr>
+        <td><%= order.id %></td>
+        <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= order.product.title %></td>
+        <td><%= order.quantity %></td>
+        <td>€<%= order.product.price * order.quantity %></td>
+        <td><%= order.status %></td>
+        <td><%= button_to "Ship", ship_order_path(order), method: :patch %>
+    <%= button_to "Cancel", cancel_order_path(order), method: :patch,
+    data: {
+    turbo_confirm: "Cancel this order?"
+    } %></tr>
+    </tr>
+    <% end %>
+    </table>
+    
+    <hr>
+
+    <h2>Shipped Orders</h2>
+    <table>
+    <% @shipped_orders.each do |order| %>
+        <tr>
+        <td><%= order.id %></td>
+        <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= order.product.title %></td>
+        <td><%= order.quantity %></td>
+        <td>€<%= order.product.price * order.quantity %></td>
+        <td><%= order.status %></td>
+        <td><%= button_to "Complete", complete_order_path(order), method: :patch %>
+    <%= button_to "Cancel", cancel_order_path(order), method: :patch,
+    data: {
+    turbo_confirm: "Cancel this order?"
+    } %> </td>
+    </tr>
+    <% end %>
+    </table>
+    
+    <hr>
+
+    <h2>Completed Orders</h2>
+    <table>
+    <% @completed_orders.each do |order| %>
+        <tr>
+        <td><%= order.id %></td>
+        <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= order.product.title %></td>
+        <td><%= order.quantity %></td>
+        <td>€<%= order.product.price * order.quantity %></td>
+        <td><%= order.status %></td>
+    </tr>
+    <% end %>
+    </table>
+
+    <hr>
+
+    <h2>Cancelled Orders</h2>
+    <table>
+    <% @cancelled_orders.each do |order| %>
+        <tr>
+        <td><%= order.id %></td>
+        <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= order.product.title %></td>
+        <td><%= order.quantity %></td>
+        <td>€<%= order.product.price * order.quantity %></td>
+        <td><%= order.status %></td>
+    </tr>
+    <% end %>
+    </table>
+
+
+
+
+

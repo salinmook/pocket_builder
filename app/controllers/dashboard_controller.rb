@@ -14,6 +14,16 @@ class DashboardController < ApplicationController
     @revenue = @orders.where.not(status: "cancelled").sum do |order|
       order.product.price * order.quantity
     end
+  end
+
+  def orders
+      @store = current_user.stores.find(params[:store_id])
+      @pending_orders = @store.orders.where(status:"pending").includes(:product).order(created_at: :desc)
+      @shipped_orders = @store.orders.where(status:"shipped").includes(:product).order(created_at: :desc)
+      @completed_orders = @store.orders.where(status:"completed").includes(:product).order(created_at: :desc)
+      @cancelled_orders = @store.orders.where(status:"cancelled").includes(:product).order(created_at: :desc)
+      
+    
     
   end
 

@@ -56,6 +56,7 @@ local: true do |f| %>
     <% end %>
 <% end %>
 
+<% cart = Cart.find_or_create_by(store: @store) %>
 <h2 id="products">Products</h2>
 <% @store.categories.each do |category| %>
     <h3 id="<%= category.name.parameterize %>"><%= category.name %></h3>
@@ -68,6 +69,7 @@ local: true do |f| %>
         turbo_confirm: "Delete this category?"
         } %>
     <% end %>
+    
     <% category.products.each do |product| %>
     <div style="border:1px solid #ddd; padding:15px; margin-bottom:20px; border-radius:10px;">
         <% if product.images.attached? %>
@@ -79,14 +81,16 @@ local: true do |f| %>
         <p><%= product.description %></p>
         <p>€<%= product.price %></p>
         <p>Stock: <%= product.stock %></p>
-        <%= button_to "Add to Cart", cart_items_path(product_id: product.id),
-        method: :post %>
-
-        <% if user_signed_in? && current_user == @store.user %>
+        
+        <%= render "products/cart_controls", 
+            product: product,
+            cart: cart %>
+       
+            
+         <% if user_signed_in? && current_user == @store.user %>
     
             <%= link_to "Edit", edit_store_product_path(@store, product) %>
     
-
             <%= button_to "Delete", store_product_path(@store, product),
             method: :delete,
             data: {
@@ -102,6 +106,13 @@ local: true do |f| %>
 <% end %>
 
 <hr>
+
+<%= turbo_frame_tag "cart" do %>
+    <%= render "carts/cart", cart: cart %>
+<% end %>
+
+<hr>
+
 <h2 id="contact">Contact Us</h2>
 <p><%= @store.address %></p>
 <p><%= @store.phone %></p>

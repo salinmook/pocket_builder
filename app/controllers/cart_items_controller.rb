@@ -2,41 +2,67 @@ class CartItemsController < ApplicationController
 
     def create 
         @product = Product.find(params[:product_id])
-        cart = Cart.find_or_create_by(store:current_store)
-        item = cart.cart_items.find_by(product:@product)
+        cart = Cart.find_or_create_by(store: current_store)
+        item = cart.cart_items.find_by(product: @product)
         if item
-                item.quantity += 1
-                item.save
-            else
-                cart.cart_items.create(
-                    product: @product,
-                    quantity: 1
-                )
-            end
-            redirect_back fallback_location: root_path
-        
+            item.increment!(:quantity)
+        else
+            item = cart.cart_items.create(
+            product: @product,
+            quantity: 1
+            )
+        end
+        @cart = cart.reload
+        render_cart_streams
     end
 
     def increase
-        item = CartItem.find(params[:id])
-        item.increment!(:quantity)
-        redirect_to cart_path(1)
+        @cart_item = CartItem.find(params[:id])
+        @cart_item.increment!(:quantity) 
+        @product = @cart_item.product
+        @cart = @cart_item.cart.reload
+
+        render_cart_streams
     end
 
     def decrease
-        item = CartItem.find(params[:id])
-        if item.quantity > 1
-            item.decrement!(:quantity)
+        @cart_item = CartItem.find(params[:id])
+        @product = @cart_item.product
+        @cart = @cart_item.cart.reload
+
+        if @cart_item.quantity > 1
+            @cart_item.decrement!(:quantity)
         else
-            item.destroy
+           @cart_item.destroy
         end
-        redirect_to cart_path(1)
+
+        render_cart_streams
     end
 
     def destroy
-        item = CartItem.find(params[:id])
-        item.destroy
-        redirect_to cart_path(1)
+        @cart_item = CartItem.find(params[:id])
+        @product = @cart_item.product
+        @cart = @cart_item.cart.reload
+        @cart_item.destroy
+        
+        render_cart_streams
+    end
+
+    private
+
+    def render_cart_streams
+        render turbo_stream: [
+            turbo_stream.replace(
+            "product_#{@product.id}",
+            partial: "products/cart_controls",
+            locals: { product: @product, cart: @cart }
+        ),
+        turbo_stream.replace(
+            "cart",
+            partial: "carts/cart",
+            locals: { cart: @cart }
+        )
+       ]
     end
     
 
