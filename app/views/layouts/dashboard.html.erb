@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pocket Builder Dashboard</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", "data-urbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+</head>
+
+<body>
+
+<h1>Pocket Builder</h1>
+<nav>
+
+<%= link_to "Dashboard", store_dashboard_path(@store) %> |
+<%= link_to "Orders", store_dashboard_orders_path(@store) %> |
+<%= link_to "Products", store_dashboard_products_path(@store) %> |
+<%= link_to "Customer", store_dashboard_customers_path(@store) %> |
+<%= link_to "Analytics", store_dashboard_analytics_path(@store) %> |
+<%= link_to "Finance", store_dashboard_finance_path(@store) %> |
+Marketing |
+Messages |
+Reviews |
+Settings
+
+</nav>
+<hr>
+
+
+<%= yield %>
+
+</body>
+</html>

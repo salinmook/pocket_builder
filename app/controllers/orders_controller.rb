@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+    before_action :authenticate_user!
 
     def index
         @orders = current_store.orders.order(created_at: :desc)
@@ -11,6 +12,7 @@ class OrdersController < ApplicationController
     def create 
         product = Product.find(params[:product_id])
         Order.create!(
+            user: current_user,
             product: product,
             store: product.store,
             quantity: 1
@@ -28,6 +30,7 @@ class OrdersController < ApplicationController
         @cart.cart_items.each do |item|
 
             Order.create!(
+                user: current_user,
                 product: item.product,
                 store: item.product.store,
                 quantity: item.quantity,
