@@ -34,6 +34,7 @@ class OrdersController < ApplicationController
                 product: item.product,
                 store: item.product.store,
                 quantity: item.quantity,
+                price: item.product.price,
                 status: "pending"
                 )
                 product = item.product

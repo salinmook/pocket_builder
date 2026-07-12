@@ -33,5 +33,8 @@
     <%= f.label :category %>
     <%= f.collection_select(:category_id, @store.categories, :id, :name) %>
 
+    <%= f.label :cost %>
+    <%= f.number_field :cost, step: 0.01 %>
+
     <%= f.submit "Update Product" %>
     <% end %>

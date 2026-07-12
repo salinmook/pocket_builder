@@ -1,5 +1,13 @@
 <h2>Analytics</h2>
+<hr>
+
 <h3>Revenue by Month</h3>
+<%= line_chart @monthly_revenue, height: "400px", prefix: "€" %>
+
+<hr>
+
+<h3>Raw Data</h3>
+
 <table>
 <tr>
     <th>Month</th>

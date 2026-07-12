@@ -51,10 +51,8 @@ class DashboardController < ApplicationController
     @store = current_user.stores.find(params[:store_id])
     @monthly_revenue = @store.orders
     .where.not(status: "cancelled")
-    .group_by { |order| order.created_at.strftime("%b%Y") }
-    .transform_values do |orders|
-      orders.sum { |order| order.product.price * order.quantity}
-    end
+    .group_by_month(:created_at, format: "%b %Y").sum("quantity * price")
+    
   end
 
   def finance
@@ -66,6 +64,11 @@ class DashboardController < ApplicationController
     @promotion_cost = 0
     @refund = 0
     @profit = @revenue - @shipping_cost - @promotion_cost - @refund
+    @cost = @store.orders.where.not(status: "cancelled").sum do |order|
+      order.product.cost * order.quantity
+    end
+    @profit = @revenue - @cost
+
   end
 
 
