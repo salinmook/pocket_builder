@@ -13,17 +13,19 @@ class DashboardController < ApplicationController
     @shipped_orders = @orders.where(status:"shipped").count
     @completed_orders = @orders.where(status:"completed").count
     @cancelled_orders = @orders.where(status: "cancelled").count
-    @revenue = @orders.where.not(status: "cancelled").sum do |order|
-      order.product.price * order.quantity
-    end
+    @revenue = OrderItem.joins(:order)
+                        .where(orders: { store_id: @store.id })
+                        .where.not(orders: { status: "cancelled" })
+                        .sum("order_items.quantity * order_items.price")
+
   end
 
   def orders
       @store = current_user.stores.find(params[:store_id])
-      @pending_orders = @store.orders.where(status:"pending").includes(:product).order(created_at: :desc)
-      @shipped_orders = @store.orders.where(status:"shipped").includes(:product).order(created_at: :desc)
-      @completed_orders = @store.orders.where(status:"completed").includes(:product).order(created_at: :desc)
-      @cancelled_orders = @store.orders.where(status:"cancelled").includes(:product).order(created_at: :desc)
+      @pending_orders = @store.orders.where(status:"pending").includes(order_items: :product).order(created_at: :desc)
+      @shipped_orders = @store.orders.where(status:"shipped").includes(order_items: :product).order(created_at: :desc)
+      @completed_orders = @store.orders.where(status:"completed").includes(order_items: :product).order(created_at: :desc)
+      @cancelled_orders = @store.orders.where(status:"cancelled").includes(order_items: :product).order(created_at: :desc)
   end
 
   def products
@@ -49,27 +51,42 @@ class DashboardController < ApplicationController
 
   def analytics
     @store = current_user.stores.find(params[:store_id])
-    @monthly_revenue = @store.orders
-    .where.not(status: "cancelled")
-    .group_by_month(:created_at, format: "%b %Y").sum("quantity * price")
+    @period = params[:period].presence_in(%w[day month year]) || "month"
+    items = OrderItem.joins(:order)
+                     .where(orders: { store_id: @store.id })
+                     .where.not(orders: { status: "cancelled" })
+    
+    @monthly_revenue = case @period
+    when "day"
+      items.where(orders: { created_at: Time.current.beginning_of_month..Time.current.end_of_month })
+           .group_by_day("orders.created_at", format: "%d %b")
+           .sum("order_items.quantity * order_items.price")
+    when "year"
+      items.group_by_year("orders.created_at", format: "%Y")
+           .sum("order_items.quantity * order_items.price")
+    else
+      items.group_by_month("orders.created_at", format: "%b %Y")
+      .sum("order_items.quantity * order_items.price")
+    end
     
   end
 
   def finance
     @store = current_user.stores.find(params[:store_id])
-    @orders = @store.orders.where.not(status: "Cancelled")
-    @revenue = @orders.sum do |order| order.product.price * order.quantity
-    end
+    @orders = @store.orders.where.not(status: "cancelled")
+    items = OrderItem.joins(:order)
+                     .where(orders: { store_id: @store.id })
+                     .where.not(orders: { status: "cancelled" })
+
+    @revenue = items.sum("order_items.quantity * order_items.price")
     @shipping_cost = 0
     @promotion_cost = 0
     @refund = 0
-    @profit = @revenue - @shipping_cost - @promotion_cost - @refund
-    @cost = @store.orders.where.not(status: "cancelled").sum do |order|
-      order.product.cost * order.quantity
-    end
-    @profit = @revenue - @cost
-
+    @cost = items.joins(:product).sum("order_items.quantity * products.cost")
+    @profit = @revenue - @shipping_cost - @promotion_cost - @refund - @cost
+    
   end
+    
 
 
   private

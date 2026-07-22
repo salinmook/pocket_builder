@@ -1,8 +1,16 @@
 <h2>Analytics</h2>
 <hr>
 
-<h3>Revenue by Month</h3>
-<%= line_chart @monthly_revenue, height: "400px", prefix: "€" %>
+<h3>Revenue by <%= @period.capitalize %></h3>
+<div style="margin-bottom: 15px;">
+    <%= link_to "Day", store_dashboard_analytics_path(@store, period: "day"), 
+    style: @period == "day" ? "font-weight: bold;" : "" %> |
+    <%= link_to "Month", store_dashboard_analytics_path(@store, period: "month"),
+    style: @period == "month" ? "font-weight: bold;" : "" %> |
+    <%= link_to "Year", store_dashboard_analytics_path(@store, period: "year"),
+    style: @period == "year" ? "font-weight: bold;" : "" %>
+</div>
+    <%= line_chart @monthly_revenue, height: "400px", prefix: "€", discrete: true %>
 
 <hr>
 
@@ -10,12 +18,12 @@
 
 <table>
 <tr>
-    <th>Month</th>
+    <th><%= @period.capitalize %></th>
     <th>Revenue</th>
 </tr>
-<% @monthly_revenue.each do | month, revenue| %>
+<% @monthly_revenue.each do | label, revenue| %>
 <tr>
-    <td><%= month %></td>
+    <td><%= label %></td>
     <td><%= revenue %></td>
 </tr>
 <% end %>

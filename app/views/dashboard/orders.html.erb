@@ -4,25 +4,29 @@
 <tr>
 <th>ID</th>
 <th>Date</th>
-<th>Product</th>
-<th>Quantity</th>
-<th>Toatl</th>
+<th>Items</th>
+<th>Total</th>
 <th>Status</th>
+<th></th>
 </tr>
 
 <% @pending_orders.each do |order| %>
     <tr>
         <td><%= order.id %></td>
         <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
-        <td><%= order.product.title %></td>
-        <td><%= order.quantity %></td>
-        <td>€<%= order.product.price * order.quantity %></td>
+        <td><% order.order_items.each do |item| %>
+            <div><%= item.product.title %> x <%= item.quantity %></div>
+            <% end %>
+        </td>
+     
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
         <td><%= order.status %></td>
         <td><%= button_to "Ship", ship_order_path(order), method: :patch %>
-    <%= button_to "Cancel", cancel_order_path(order), method: :patch,
+            <%= button_to "Cancel", cancel_order_path(order), method: :patch,
     data: {
     turbo_confirm: "Cancel this order?"
-    } %></tr>
+    } %></td>
+     </tr>
     </tr>
     <% end %>
     </table>
@@ -30,21 +34,34 @@
     <hr>
 
     <h2>Shipped Orders</h2>
-    <table>
-    <% @shipped_orders.each do |order| %>
-        <tr>
+<table>
+<tr>
+<th>ID</th>
+<th>Date</th>
+<th>Items</th>
+<th>Total</th>
+<th>Status</th>
+<th></th>
+</tr>
+
+<% @Shipped_orders.each do |order| %>
+    <tr>
         <td><%= order.id %></td>
         <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
-        <td><%= order.product.title %></td>
-        <td><%= order.quantity %></td>
-        <td>€<%= order.product.price * order.quantity %></td>
+        <td><% order.order_items.each do |item| %>
+            <div><%= item.product.title %> x <%= item.quantity %></div>
+            <% end %>
+        </td>
+     
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
         <td><%= order.status %></td>
-        <td><%= button_to "Complete", complete_order_path(order), method: :patch %>
-    <%= button_to "Cancel", cancel_order_path(order), method: :patch,
+        <td><%= button_to "Complete", Complete_order_path(order), method: :patch %>
+            <%= button_to "Cancel", cancel_order_path(order), method: :patch,
     data: {
     turbo_confirm: "Cancel this order?"
-    } %> </td>
-    </tr>
+    } %></td>
+     </tr>
+    
     <% end %>
     </table>
     
@@ -52,13 +69,25 @@
 
     <h2>Completed Orders</h2>
     <table>
-    <% @completed_orders.each do |order| %>
-        <tr>
+<tr>
+<th>ID</th>
+<th>Date</th>
+<th>Items</th>
+<th>Total</th>
+<th>Status</th>
+
+</tr>
+
+<% @Completed_orders.each do |order| %>
+    <tr>
         <td><%= order.id %></td>
         <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
-        <td><%= order.product.title %></td>
-        <td><%= order.quantity %></td>
-        <td>€<%= order.product.price * order.quantity %></td>
+        <td><% order.order_items.each do |item| %>
+            <div><%= item.product.title %> x <%= item.quantity %></div>
+            <% end %>
+        </td>
+     
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
         <td><%= order.status %></td>
     </tr>
     <% end %>
@@ -68,14 +97,27 @@
 
     <h2>Cancelled Orders</h2>
     <table>
-    <% @cancelled_orders.each do |order| %>
-        <tr>
+<tr>
+<th>ID</th>
+<th>Date</th>
+<th>Items</th>
+<th>Total</th>
+<th>Status</th>
+
+</tr>
+
+<% @cancelled_orders.each do |order| %>
+    <tr>
         <td><%= order.id %></td>
         <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
-        <td><%= order.product.title %></td>
-        <td><%= order.quantity %></td>
-        <td>€<%= order.product.price * order.quantity %></td>
+        <td><% order.order_items.each do |item| %>
+            <div><%= item.product.title %> x <%= item.quantity %></div>
+            <% end %>
+        </td>
+     
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
         <td><%= order.status %></td>
+       
     </tr>
     <% end %>
     </table>

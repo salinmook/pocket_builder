@@ -1,4 +1,4 @@
-<h2>Customers<h2>
+<h2>Customers</h2>
 <table>
 <tr>
     <th>Name</th>
@@ -8,7 +8,7 @@
 
 <% @customers.each do |customer| %>
 <tr>
-    
+    <td><%= customer.email.split("@").first %></td>
     <td><%= customer.email %></td>
     <th><%= @store.orders.where(user: customer).count %></td>
 </tr>
