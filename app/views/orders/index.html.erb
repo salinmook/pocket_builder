@@ -3,11 +3,15 @@
     <div style="border:1px solid #ddd; padding: 15px; margin-bottom: 20px;">
 
         <h3>Order #<%= order.id %></h3>
-        <p>Product: <%= order.product.title %></p>
+        <ul>
+            <% order.order_items.each do |item| %>
+            <li><%= item.product.title %> x <%= item.quantity %> - €<%= item.price * item.quantity %></li>
+            <% end %>
+        </ul>
         <p>Status: <%= order.status %></p>
-        <p>Date: <%= order.created_at.strftime("%d/%m/%y") %></p>
-        
-    </div> 
+        <p>Date: <%= order.created_at.strftime("%d/%m/%Y") %></p>
+    </div>
+            
     <%= link_to "View", order_path(order) %>
     <% if order.status == "pending" %>
         <%= button_to "Cancel", cancel_order_path(order),

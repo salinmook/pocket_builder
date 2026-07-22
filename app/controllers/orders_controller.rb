@@ -2,20 +2,25 @@ class OrdersController < ApplicationController
     before_action :authenticate_user!
 
     def index
-        @orders = current_store.orders.order(created_at: :desc)
+        @orders = current_store.orders.includes(order_items: :product).order(created_at: :desc)
     end
 
     def show
-        @order = Order.find(params[:id])
+        @order = Order.includes(order_items: :product).find(params[:id])
     end
 
     def create 
         product = Product.find(params[:product_id])
-        Order.create!(
-            user: current_user,
-            product: product,
+        order = Order.create!(
             store: product.store,
-            quantity: 1
+            user: current_user,
+            status: "pending"
+        )
+
+        order.order_items.create!(
+            product: product,
+            quantity: 1,
+            price: product.price
         )
 
         product.update!(
@@ -27,24 +32,32 @@ class OrdersController < ApplicationController
 
     def checkout
         @cart = Cart.find_or_create_by(store: current_store)
-        @cart.cart_items.each do |item|
+        
+        if @cart.cart_items.empty?
+            redirect_to cart_path(@cart), alert: "Your cart is empty" and return
+        end
 
-            Order.create!(
+        order = Order.create!(
+                store: current_store,
                 user: current_user,
-                product: item.product,
-                store: item.product.store,
-                quantity: item.quantity,
-                price: item.product.price,
                 status: "pending"
                 )
-                product = item.product
-                product.stock -= item.quantity
-                product.save
+        @cart.cart_items.each do |item|
+            order.order_items.create!(
+                product: item.product,
+                quantity: item.quantity,
+                price: item.product.price
+            )
+            product = item.product
+            product.update!(
+                stock: product.stock - item.quantity
+            )
         end
-            
-           @cart.cart_items.destroy_all
-        redirect_to order_success_path(store_id: current_store.id), notice: "order created sucessfully!"
+        @cart.cart_items.destroy_all
+        redirect_to order_success_path(store_id: current_store.id), notice: "Order created successfully!"
+                
     end
+           
 
     def success
         @store = current_store

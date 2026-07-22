@@ -52,6 +52,10 @@ Rails.application.routes.draw do
   get "/stores/:store_id/dashboard/finance",
   to: "dashboard#finance",
   as: "store_dashboard_finance"
+
+  resources :stores, only: [] do 
+    resources :coupons, controller: "dashboard/coupons"
+  end
   
 
   resources :cart_items do 
