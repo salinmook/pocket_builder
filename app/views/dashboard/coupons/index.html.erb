@@ -1,0 +1,45 @@
+<h2>Coupons</h2>
+<%= link_to "New Coupon", new_store_coupon_path(@store) %>
+<hr>
+
+<table>
+<tr>
+    <th>Code</th>
+    <th>Type</th>
+    <th>Value</th>
+    <th>Min Order</th>
+    <th>Valid</th>
+    <th>Usage</th>
+    <th>Active</th>
+    <th></th>
+</tr>
+<% @coupons.each do |coupon| %>
+<tr>
+    <td><%= coupon.code %></td>
+    <td><%= coupon.discount_type.humanize %></td>
+    <td>
+        <% if coupon.discount_type == "percentage" %>
+            <%= coupon.discount_value %>%
+        <% elsif coupon.discount_type == "fixed_amount" %>
+            €<%= coupon.discount_value %>
+        <% else %>
+        -
+        <% end %>
+    </td>
+    <td><%= coupon.minimum_order_amount.present? ? "€#{coupon.minimum_order_amount}" : "-" %></td>
+    <td><% if coupon.starts_at || coupon.ends_at %>
+            <%= coupon.starts_at&.strftime("%d/%m/%Y") || "..." %> - <%= coupon.ends_at&.strftime("%d/%m/%Y") || "..." %>
+        <% else %>
+        Always
+        <% end %>
+    </td>
+    <td><%= coupon.usage_count %><%= "/#{coupon.usage_limit}" if coupon.usage_limit.present? %></td>
+    <td><%= coupon.active? ? "Yes" : "No" %></td>
+    <td><%= link_to "Edit", edit_store_coupon_path(@store, coupon) %>
+        <%= button_to "Delete", store_coupon_path(@store, coupon),
+        method: :delete,
+        data: { turbo_confirm: "Delete this coupon?" } %>
+    </td>
+</tr>
+<% end %>
+</table>
