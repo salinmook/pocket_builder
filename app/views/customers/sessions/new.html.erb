@@ -1,0 +1,18 @@
+<h2>Login to <%= @store.name %></h2>
+<% if flash[:alert] %>
+    <p style="color:red;"><%= flash[:alert] %></p>
+<% end %>
+<%= form_with url: store_customer_session_path(@store), method: :post, local: true do |f| %>
+    <p>
+        <%= f.label :email %><br>
+        <%= f.email_field :email, name: "customer[email]" %> 
+    </p>
+
+    <p>
+        <%= f.label :password %><br>
+        <%= f.password_field :password, name: "customer[password]" %>
+    </p>
+
+    <%= f.submit "Login" %>
+<% end %>
+<%= link_to "Don't have an account? Sign up", store_new_customer_registration_path(@store) %>
