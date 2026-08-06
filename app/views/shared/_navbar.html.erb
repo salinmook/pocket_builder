@@ -1,49 +1,55 @@
 <% store = current_store %>
 <% return unless store %>
-<% cart = Cart.find_or_create_by(store: store) %>
+<% cart = current_cart %>
   <% if store.theme == "topbar" %>
     <nav>
         <%= link_to "Home", store_path(store) %> |
         <%= link_to "About Us", about_store_path(store) %> |
         <details style="display:inline-block;">
           <summary>Products</summary>
-          <% store.categories.each do |category| %>
-            <div>
-              <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
-                <%= category.name %>
-              
-            </div>
-          <% end %>
+          <div style="position:absolute; top:100%, left:0; background:white; border:1px solid #ccc;
+          padding:8px; z-index:10; white-space:nowrap;">
+            <% store.categories.each do |category| %>
+              <div>
+                <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
+              </div>
+            <% end %>
+          </div>
         </details> |
 
         <%= link_to "Cart", cart_path(cart) if cart %> |
         <%= link_to "My Orders", orders_path %> |
         <%= link_to "Contact Us", contact_store_path(store) %> |
         <%= link_to "FAQ", faq_store_path(store) %>
+        <% if user_signed_in? && current_user == store.user %>
+          | <%= link_to "Back to Dashboard", store_dashboard_path(store) %>
+        <% end %>
     </nav>
 
   <% elsif store.theme == "grid" %>
     <div>
       
-      <button onclick="location.href='<%= store_path(store) %>'">Home</button>
-      <button onclick="location.href='<%= about_store_path(store) %>'">About Us</button>
-     
-
-      <details style="display:inline-block;">
-        <summary>Product</summary>
-        <% store.categories.each do |category| %>
-          <div>
-            <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
-              <%= category.name %>
-            
+      <%= link_to "Home", store_path(store), class: "grid-nav-btn" %> 
+        <%= link_to "About Us", about_store_path(store), class: "grid-nav-btn" %> 
+        <details style="display:inline-block; position:relative;">
+          <summary class="grid-nav-btn" style="cursor:pointer;">Products</summary>
+          <div style="position:absolute; top:100%; left:0; background:white; border:1px solid #ccc;
+          padding:8px; z-index:10; white-space:nowrap;">
+            <% store.categories.each do |category| %>
+              <div>
+                <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
+              </div>
+            <% end %>
           </div>
-        <% end %>
-      </details>
+        </details> 
 
-      <button onclick="location.href='<%= cart_path(cart) %>'">Cart</button>
-      <button onclick="location.href='<%= orders_path %>'">My Orders</button>
-      <button onclick="location.href='<%= contact_store_path(store) %>'">Contact us</button>
-      <button onclick="location.href='<%= faq_store_path(store) %>'">FAQ</button>
+        <%= link_to "Cart", cart_path(cart), class: "grid-nav-btn" if cart %> 
+        <%= link_to "My Orders", orders_path, class: "grid-nav-btn" %> 
+        <%= link_to "Contact Us", contact_store_path(store), class: "grid-nav-btn" %> 
+        <%= link_to "FAQ", faq_store_path(store), class: "grid-nav-btn" %>
+        <% if user_signed_in? && current_user == store.user %>
+           <%= link_to "Back to Dashboard", store_dashboard_path(store), class: "grid-nav-btn" %>
+        <% end %>
       
     </div>
 
@@ -60,8 +66,7 @@
             <% store.categories.each do |category| %>
               <div>
                 <%= link_to category.name, store_path(store, anchor: category.name.parameterize ) %>
-                  <%= category.name %>
-                
+                                  
               </div>
             <% end %>
           </details>
@@ -71,6 +76,9 @@
         <li><%= link_to "My Orders", orders_path %></li>
         <li><%= link_to "Contact Us", contact_store_path(store) %></li>
         <li><%= link_to "FAQ", faq_store_path(store) %></li>
+        <% if user_signed_in? && current_user == store.user %>
+          <li><%= link_to "Back to Dashboard", store_dashboard_path(store) %></li>
+        <% end %>
         
       </ul>
     </details>

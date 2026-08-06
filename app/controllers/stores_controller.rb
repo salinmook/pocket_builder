@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, except: [:show, :about, :faq, :contact]
 
     def index
         @stores = current_user.stores

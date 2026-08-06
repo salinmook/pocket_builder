@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get "carts/show"
   get "pages/home"
   devise_for :users
+  devise_for :customers, skip: :all
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -32,6 +33,13 @@ Rails.application.routes.draw do
         delete :remove_image
       end
       resources :orders, only: [:create]
+    end
+    devise_scope :customer do 
+      get "customer/sign_up", to: "customers/registrations#new", as: :new_customer_registration
+      post "customer", to: "customers/registrations#create", as: :customer_registration
+      get "customer/sign_in", to: "customers/sessions#new", as: :new_customer_session
+      post "customer/sign_in", to: "customers/sessions#create", as: :customer_session
+      delete "customer/sign_out", to: "customers/sessions#destroy", as: :destroy_customer_session
     end
   end
   get "/stores/:store_id/dashboard", 
@@ -64,7 +72,13 @@ Rails.application.routes.draw do
       patch :decrease
     end
   end
-  resources :carts, only: [:show]
+  resources :carts, only: [:show] do
+    member do
+      post :apply_coupon
+      delete :remove_coupon
+    end
+  end
+  get "/checkout", to: "orders#new_checkout", as: :new_checkout
   post "/checkout", to: "orders#checkout"
   get "store/:store_id/order_success",
   to: "orders#success", 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pocket Builder Dashboard</title>
+    <title><%= @store.name %> Dashboard</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     
@@ -11,7 +11,7 @@
 
 <body>
 
-<h1>Pocket Builder</h1>
+<h1><%= @store.name %></h1>
 <nav>
 
 <%= link_to "Dashboard", store_dashboard_path(@store) %> |
@@ -23,7 +23,8 @@
 <%= link_to "Marketing", store_coupons_path(@store) %> |
 Messages |
 Reviews |
-Settings
+Settings|
+<%= link_to "View Shop", store_path(@store), target: "_blank" %>
 
 </nav>
 <hr>

@@ -8,3 +8,17 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+.grid-nav-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 4px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    text-align: center;
+}
+.grid-nav-btn:hover {
+    background: #e0e0e0;
+}

@@ -16,7 +16,8 @@ class DashboardController < ApplicationController
     @revenue = OrderItem.joins(:order)
                         .where(orders: { store_id: @store.id })
                         .where.not(orders: { status: "cancelled" })
-                        .sum("order_items.quantity * order_items.price")
+                        .sum("order_items.quantity * order_items.price") - 
+                        @store.orders.where.not(status: "cancelled").sum(:discount_amount)
 
   end
 
@@ -78,7 +79,8 @@ class DashboardController < ApplicationController
                      .where(orders: { store_id: @store.id })
                      .where.not(orders: { status: "cancelled" })
 
-    @revenue = items.sum("order_items.quantity * order_items.price")
+    @revenue = items.sum("order_items.quantity * order_items.price") - 
+               @store.orders.where.not(status: "canceelled").sum(:discount_amount)
     @shipping_cost = 0
     @promotion_cost = 0
     @refund = 0

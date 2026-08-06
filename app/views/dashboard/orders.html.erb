@@ -5,6 +5,7 @@
 <th>ID</th>
 <th>Date</th>
 <th>Items</th>
+<th>Shipping</th>
 <th>Total</th>
 <th>Status</th>
 <th></th>
@@ -18,8 +19,13 @@
             <div><%= item.product.title %> x <%= item.quantity %></div>
             <% end %>
         </td>
+        <td>
+            <strong><%= order.shipping_name %></strong>
+            <%= order.shipping_phone %><br>
+            <%= order.shipping_address %>
+        </td>
      
-        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } - order.discount_amount %></td>
         <td><%= order.status %></td>
         <td><%= button_to "Ship", ship_order_path(order), method: :patch %>
             <%= button_to "Cancel", cancel_order_path(order), method: :patch,
@@ -39,12 +45,13 @@
 <th>ID</th>
 <th>Date</th>
 <th>Items</th>
+<th>Shipping</th>
 <th>Total</th>
 <th>Status</th>
 <th></th>
 </tr>
 
-<% @Shipped_orders.each do |order| %>
+<% @shipped_orders.each do |order| %>
     <tr>
         <td><%= order.id %></td>
         <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
@@ -52,10 +59,15 @@
             <div><%= item.product.title %> x <%= item.quantity %></div>
             <% end %>
         </td>
+        <td>
+            <strong><%= order.shipping_name %></strong>
+            <%= order.shipping_phone %><br>
+            <%= order.shipping_address %>
+        </td>
      
-        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } - order.discount_amount %></td>
         <td><%= order.status %></td>
-        <td><%= button_to "Complete", Complete_order_path(order), method: :patch %>
+        <td><%= button_to "Complete", complete_order_path(order), method: :patch %>
             <%= button_to "Cancel", cancel_order_path(order), method: :patch,
     data: {
     turbo_confirm: "Cancel this order?"
@@ -73,12 +85,13 @@
 <th>ID</th>
 <th>Date</th>
 <th>Items</th>
+<th>Shipping</th>
 <th>Total</th>
 <th>Status</th>
 
 </tr>
 
-<% @Completed_orders.each do |order| %>
+<% @completed_orders.each do |order| %>
     <tr>
         <td><%= order.id %></td>
         <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
@@ -86,8 +99,13 @@
             <div><%= item.product.title %> x <%= item.quantity %></div>
             <% end %>
         </td>
+        <td>
+            <strong><%= order.shipping_name %></strong>
+            <%= order.shipping_phone %><br>
+            <%= order.shipping_address %>
+        </td>
      
-        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } - order.discount_amount %></td>
         <td><%= order.status %></td>
     </tr>
     <% end %>
@@ -101,6 +119,7 @@
 <th>ID</th>
 <th>Date</th>
 <th>Items</th>
+<th>Shipping</th>
 <th>Total</th>
 <th>Status</th>
 
@@ -114,8 +133,13 @@
             <div><%= item.product.title %> x <%= item.quantity %></div>
             <% end %>
         </td>
+        <td>
+            <strong><%= order.shipping_name %></strong>
+            <%= order.shipping_phone %><br>
+            <%= order.shipping_address %>
+        </td>
      
-        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } %></td>
+        <td>€<%= order.order_items.sum { |i| i.price * i.quantity } - order.discount_amount %></td>
         <td><%= order.status %></td>
        
     </tr>

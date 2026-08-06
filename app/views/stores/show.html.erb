@@ -12,7 +12,7 @@
 font-family: <%= @store.font_family %>;"><%= @store.name %></h1>
 <p style="color: <%= @store.primary_color %>; 
 font-family: <%= @store.font_family %>;"><%= @store.description %></p>
-<p>Theme: <%= @store.theme %></p>
+
 
 <% if user_signed_in? && current_user == @store.user %>
 
@@ -56,7 +56,7 @@ local: true do |f| %>
     <% end %>
 <% end %>
 
-<% cart = Cart.find_or_create_by(store: @store) %>
+<% cart = current_cart %>
 <h2 id="products">Products</h2>
 <% @store.categories.each do |category| %>
     <h3 id="<%= category.name.parameterize %>"><%= category.name %></h3>
