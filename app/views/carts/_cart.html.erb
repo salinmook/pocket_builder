@@ -20,18 +20,41 @@
             } %>
         </div>
     <% end %>
-    <% total = cart.cart_items.sum { |item| item.product.price * item.quantity } %>
+    
+    <hr>
 
-    <h2>Total Cart: €<%= total %></h2>
-    <% if cart.cart_items.any? %>
-        <%= button_to "Checkout", checkout_path,
-        method: :post,
-        data: {
-            turbo_confirm: "Confirm order?",
-            turbo_frame: "_top"
-        } %>
+    <% if cart.coupon.present? %>
+        <p style="color:green;">
+            Coupon <strong><%= cart.coupon.code %></strong> applied
+            <%= button_to "Remove", remove_coupon_cart_path(cart),
+            method: :delete, style: "display:inline; margin-left:8px" %>
+        </p>
     <% else %>
-        <p>Your cart is empty</p>
+        <%= form_with url: apply_coupon_cart_path(cart), method: :post, local: true do |f| %>
+            <%= f.text_field :code, placeholder: "Promo code" %>
+            <%= f.submit "Apply" %>
+        <% end %>
     <% end %>
-<% end %>
+
+    <% if local_assigns[:cart_error].present? %>
+        <p style="color:red;"><%= cart_error %></p>
+    <% end %>
+
+    <p>Subtotal: €<%= cart.subtotal %></p>
+    <% if cart.coupon.present? %>
+        <p>Discount: -€<%= cart.discount_amount %></p>
+    <% end %>
+
+    <h2>Total Cart: €<%= cart.total %></h2>
+        <% if cart.cart_items.any? %>
+            <%= button_to "Checkout", checkout_path,
+            method: :post,
+            data: {
+                turbo_confirm: "Confirm order?",
+                turbo_frame: "_top"
+            } %>
+        <% else %>
+            <p>Your cart is empty</p>
+        <% end %>
+    <% end %>
 

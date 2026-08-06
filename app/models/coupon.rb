@@ -1,6 +1,7 @@
 class Coupon < ApplicationRecord
   belongs_to :store
 
+
   VALID_TYPES = %w[percentage fixed_amount free_shipping].freeze
 
   validates :code, presence: true, uniqueness: { scope: :store_id, case_sensitive: false }
@@ -8,6 +9,7 @@ class Coupon < ApplicationRecord
   validates :discount_value, presence: true, numericality: { greater_than: 0 }, unless: -> { discount_type == "free_shipping" }
 
   before_validation { self.code = code.to_s.strip.upcase }
+  before_save :normalize_dates
 
   def valid_now?
     return false unless active
@@ -27,11 +29,19 @@ class Coupon < ApplicationRecord
     when "percentage"
       (order_total * discount_value / 100).round(2)
     when "fixed_amount"
-      [discount_value, order_total].minimum_order_amount
+      [discount_value, order_total].min 
     when "free_shipping"
       0 
     else
       0
     end
   end
+
+  private
+
+  def normalize_dates
+    self.starts_at = starts_at.beginning_of_day if starts_at.present?
+    self.ends_at = ends_at.end_of_day if ends_at.present?
+  end
+
 end 

@@ -13,6 +13,7 @@
 
     <% else %>
         <%= button_to "Add to Cart", cart_items_path(product_id: product.id), 
-            method: :post %>
+            method: :post,
+            data: { turbo_frame: "_top" } %>
     <% end %>
 <% end %>
