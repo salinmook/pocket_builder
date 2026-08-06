@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, except: [:show]
     before_action :set_store
 
     def new
@@ -69,6 +69,10 @@ class ProductsController < ApplicationController
     end
 
     def set_store
+        if action_name == "show"
+            @store = Store.find(params[:store_id])
+        else
         @store = current_user.stores.find(params[:store_id])
+    end
     end
 end
