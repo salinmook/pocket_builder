@@ -1,0 +1,32 @@
+<h1>Checkout</h1>
+<h3>Order Summary</h3>
+<% @cart.cart_items.includes(:product).each do |item| %>
+    <p><%= item.product.title %> x <%= item.quantity %> - €<%= item.product.price * item.quantity %></p>
+    <% end %>
+    <p>Subtotal: €<%= @cart.subtotal %></p>
+    <% if @cart.coupon.present? %>
+        <p>Discount: -€<%= @cart.discount_amount %></p>
+    <% end %>
+    <h3>Total: €<%= @cart.total %></h3>
+    <hr>
+    <h3>Shipping Details</h3>
+    <% if flash[:alert] %>
+        <p style="color:red;"><%= flash[:alert] %></p>
+    <% end %>
+    <%= form_with url: checkout_path, method: :post, local: true do |f| %>
+        <p>
+            <%= label_tag :shipping_name, "Full Name" %><br>
+            <%= text_field_tag :shipping_name, params[:shipping_name] %>
+        </p>
+        <p>
+            <%= label_tag :shipping_phone, "Phone Number" %><br>
+            <%= text_field_tag :shipping_phone, params[:shipping_phone] %>
+        </p>
+        <p>
+            <%= label_tag :shipping_address, "Delivery Address" %><br>
+            <%= text_area_tag :shipping_address, params[:shipping_address], rows: 4 %>
+        </p>
+        <%= submit_tag "Confirm Order" %>
+    <% end %>
+    <%= link_to "Baack to Cart", cart_path(@cart) %>
+

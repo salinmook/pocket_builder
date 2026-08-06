@@ -8,6 +8,13 @@
             <li><%= item.product.title %> x <%= item.quantity %> - €<%= item.price * item.quantity %></li>
             <% end %>
         </ul>
+        <% subtotal = order.order_items.sum { |i| i.price * i.quantity } %>
+        
+        <% if order.coupon.present? %>
+            <p>Subtotal: €<%= subtotal %></p>
+            <p>Coupon: <%= order.coupon.code %> (-€<%= order.discount_amount %>)</p>
+        <% end %>
+        <p><strong>Total: €<%= subtotal - order.discount_amount %></strong></p>
         <p>Status: <%= order.status %></p>
         <p>Date: <%= order.created_at.strftime("%d/%m/%Y") %></p>
     </div>

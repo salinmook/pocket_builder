@@ -10,7 +10,20 @@
         <p>Subtotal: €<%= item.price * item.quantity %></p>
     </div>
 <% end %>
-<h3>Total: €<%= @order.order_items.sum { |i| i.price * i.quantity } %></h3>
+
+<% subtotal = @order.order_items.sum { |i| i.price * i.quantity } %>
+<p>Subtotal: €<%= subtotal %></p>
+<% if @order.coupon.present? %>
+    <p>Coupon Applied: <%= @order.coupon.code %></p>
+    <p>Discount: -€<%= @order.discount_amount %></p>
+<% end %>
+
+<h3>Total: €<%= subtotal - @order.discount_amount %></h3>
 <p>Status: <%= @order.status %></p>
 <p>Date: <%= @order.created_at.strftime("%d/%m/%Y") %></p>
+
+<h3>Shipping Details</h3>
+<p>Name: <%= @order.shipping_name %></p>
+<p>Phone: <%= @order.shipping_phone %></p>
+<p>Address: <%= @order.shipping_address %></p>
 <%= link_to "Back", orders_path %>
