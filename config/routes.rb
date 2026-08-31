@@ -34,12 +34,20 @@ Rails.application.routes.draw do
       end
       resources :orders, only: [:create]
     end
+
+    resources :addresses, controller: "customers/addresses" do
+      member do
+        post :select
+      end
+    end
     devise_scope :customer do 
       get "customer/sign_up", to: "customers/registrations#new", as: :new_customer_registration
       post "customer", to: "customers/registrations#create", as: :customer_registration
       get "customer/sign_in", to: "customers/sessions#new", as: :new_customer_session
       post "customer/sign_in", to: "customers/sessions#create", as: :customer_session
       delete "customer/sign_out", to: "customers/sessions#destroy", as: :destroy_customer_session
+      get "customer/edit", to: "customers/registrations#edit", as: :edit_customer_registration
+      patch "customer", to: "customers/registrations#update"
     end
   end
   get "/stores/:store_id/dashboard", 

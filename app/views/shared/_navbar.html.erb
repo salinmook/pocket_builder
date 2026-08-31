@@ -24,6 +24,26 @@
         <% if user_signed_in? && current_user == store.user %>
           | <%= link_to "Back to Dashboard", store_dashboard_path(store) %>
         <% end %>
+        <% if customer_signed_in? %>
+        | <details style="display:inline-block; position:relative;">
+              <summary style="cursor:pointer; display:inline-block;">
+                <% if current_customer.avatar.attached? %>
+                  <%= image_tag current_customer.avatar, width: 30, style: "border-radius:50%; vertical-align:middle;" %>
+                <% else %>
+                  <%= image_tag "default_avatar.png", width: 30, style: "border-radius:50%; vertical-align:middle;" %>
+                <% end %>
+              </summary>
+              <div style="position:absolute; top:100%; right:0; background:white; border:1px solid #ccc; padding:8px; z-index:10; white-space:nowrap;">
+                <div><%= link_to "My profile", store_edit_customer_registration_path(store) %></div>
+                <div><%= link_to "My Addresses", store_addresses_path(store) %></div>
+                <div><%= link_to "My Orders", orders_path %></div>
+                <div><%= link_to "Cart", cart_path(cart) if cart %></div>
+                <div><%= button_to "Logout", store_destroy_customer_session_path(store), method: :delete %></div>
+              </div>
+          </details>
+        <% else %>
+        | <%= link_to "Login", store_new_customer_session_path(store) %>
+        <% end %>
     </nav>
 
   <% elsif store.theme == "grid" %>
@@ -50,6 +70,27 @@
         <% if user_signed_in? && current_user == store.user %>
            <%= link_to "Back to Dashboard", store_dashboard_path(store), class: "grid-nav-btn" %>
         <% end %>
+        <% if customer_signed_in? %>
+            <details style="display:inline-block; position:relative;">
+              <summary style="cursor:pointer; display:inline-block;">
+                <% if current_customer.avatar.attached? %>
+                  <%= image_tag current_customer.avatar, width: 30, style: "border-radius:50%; vertical-align:middle;" %>
+                <% else %>
+                  <%= image_tag "default_avatar.png", width: 30, style: "border-radius:50%; vertical-align:middle;" %>
+                <% end %>
+              </summary>
+              <div style="position:absolute; top:100%; right:0; background:white; border:1px solid #ccc; padding:8px; z-index:10; white-space:nowrap;">
+                <div><%= link_to "My profile", store_edit_customer_registration_path(store) %></div>
+                <div><%= link_to "My Addresses", store_addresses_path(store) %></div>
+                <div><%= link_to "My Orders", orders_path %></div>
+                <div><%= link_to "Cart", cart_path(cart) if cart %></div>
+                <div><%= button_to "Logout", store_destroy_customer_session_path(store), method: :delete %></div>
+              </div>
+          </details>
+        <% else %>
+        | <%= link_to "Login", store_new_customer_session_path(store) %>
+        <% end %>
+              
       
     </div>
 
@@ -78,6 +119,29 @@
         <li><%= link_to "FAQ", faq_store_path(store) %></li>
         <% if user_signed_in? && current_user == store.user %>
           <li><%= link_to "Back to Dashboard", store_dashboard_path(store) %></li>
+        <% end %>
+        <% if customer_signed_in? %>
+          <li>
+            <details>
+              <summary>
+                <% if current_customer.avatar.attached? %>
+                  <%= image_tag current_customer.avatar, width: 24, style: "border-radius:50%; vertical-align:middle;" %>
+                <% else %>
+                  <%= image_tag "default_avatar.png", width: 24, style: "border-radius:50%; vertical-align:middle;" %>
+                <% end %>
+                Account
+              </summary>
+              <ul>
+                <li><%= link_to "My profile", store_edit_customer_registration_path(store) %></li>
+                <li><%= link_to "My Addresses", store_addresses_path(store) %></li>
+                <li><%= link_to "My Orders", orders_path %></li>
+                <li><%= link_to "Cart", cart_path(cart) if cart %></li>
+                <li><%= button_to "Logout", store_destroy_customer_session_path(store), method: :delete %></li>
+              </ul>
+            </details>
+          </li>
+        <% else %>
+        <li><%= link_to "Login", store_new_customer_session_path(store) %></li>
         <% end %>
         
       </ul>

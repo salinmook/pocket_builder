@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer: one
+  label: MyString
+  name: MyString
+  phone: MyString
+  address_line: MyText
+  is_default: false
+
+two:
+  customer: two
+  label: MyString
+  name: MyString
+  phone: MyString
+  address_line: MyText
+  is_default: false

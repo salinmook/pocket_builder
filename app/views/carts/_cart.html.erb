@@ -47,10 +47,8 @@
 
     <h2>Total Cart: €<%= cart.total %></h2>
         <% if cart.cart_items.any? %>
-            <%= button_to "Checkout", checkout_path,
-            method: :post,
+            <%= link_to "Checkout", new_checkout_path,
             data: {
-                turbo_confirm: "Confirm order?",
                 turbo_frame: "_top"
             } %>
         <% else %>

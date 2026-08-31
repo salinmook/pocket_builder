@@ -46,8 +46,8 @@ class DashboardController < ApplicationController
 
   def customers
     @store = current_user.stores.find(params[:store_id])
-    @orders = @store.orders.includes(:user).order(created_at: :desc)
-    @customers = @orders.map(&:user).uniq
+    @orders = @store.orders.includes(:customer).order(created_at: :desc)
+    @customers = @orders.map(&:customer).compact.uniq
   end
 
   def analytics

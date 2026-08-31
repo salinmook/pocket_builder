@@ -13,20 +13,21 @@
     <% if flash[:alert] %>
         <p style="color:red;"><%= flash[:alert] %></p>
     <% end %>
-    <%= form_with url: checkout_path, method: :post, local: true do |f| %>
-        <p>
-            <%= label_tag :shipping_name, "Full Name" %><br>
-            <%= text_field_tag :shipping_name, params[:shipping_name] %>
-        </p>
-        <p>
-            <%= label_tag :shipping_phone, "Phone Number" %><br>
-            <%= text_field_tag :shipping_phone, params[:shipping_phone] %>
-        </p>
-        <p>
-            <%= label_tag :shipping_address, "Delivery Address" %><br>
-            <%= text_area_tag :shipping_address, params[:shipping_address], rows: 4 %>
-        </p>
-        <%= submit_tag "Confirm Order" %>
-    <% end %>
-    <%= link_to "Baack to Cart", cart_path(@cart) %>
 
+    <% if @selected_address %>
+        <p>
+            <strong><%= @selected_address.name %></strong><br>
+            <%= @selected_address.address_line %><br>
+            <%= @selected_address.phone %>
+        </p>
+        <%= link_to "Change delivery address", store_addresses_path(@store, checkout: true) %>
+
+        <hr>
+        <%= button_to "Confirm Order", checkout_path, method: :post, data: { turbo_confirm: "Confirm this order?" } %>
+    <% else %>  
+        <p>You don't have a delevery address yet.</p>
+        <%= link_to "Add a delivery address", new_store_address_path(@store, checkout: true) %>
+    <% end %>
+
+        <hr>
+        <%= link_to "Back to cart", cart_path(@cart) %>

@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-    before_action :require_customer_login!, only: [:index, :show, :create, :checkout, :cancel]
+    before_action :require_customer_login!, only: [:index, :show, :create, :new_checkout, :checkout, :cancel]
     before_action :authenticate_user!, only:[:ship, :complete]
 
     def index
@@ -32,16 +32,21 @@ class OrdersController < ApplicationController
     end
 
     def new_checkout
+        @store = current_store
         @cart = current_cart
         if @cart.cart_items.empty?
             redirect_to cart_path(@cart), alert: "Your cart is empty" and return
+        end
+        @selected_address = if session[:checkout_address_id].present?
+            current_customer.addresses.find_by(id: session[:checkout_address_id])
+        else
+            current_customer.addresses.find_by(is_default: true) || current_customer.addresses.order(created_at: :desc).first
         end
     end
 
     def checkout
         @cart = current_cart
-        
-        if @cart.cart_items.empty?
+         if @cart.cart_items.empty?
             redirect_to cart_path(@cart), alert: "Your cart is empty" 
             return
         end
@@ -51,13 +56,19 @@ class OrdersController < ApplicationController
             redirect_to cart_path(@cart), alert: "#{out_of_stock_item.product.title} only has #{out_of_stock_item.product.stock} left in stock"
             return
         end
-        
-        if shipping_params[:shipping_name].blank? || shipping_params[:shipping_phone].blank? || shipping_params[:shipping_address].blank?
-            @cart = current_cart
-            flash.now[:alert] = "Please fill in all shipping details"
-            render :new_checkout, status: :unprocessable_entity and return
+
+        selected_address = if session[:checkout_address_id].present?
+            current_customer.addresses.find_by(id: session[:checkout_address_id])
+        else
+            current_customer.addresses.find_by(is_default: true) || current_customer.addresses.order(created_at: :desc).first
         end
 
+
+        if selected_address.nil?
+            redirect_to new_checkout_path, alert: "Please add a delivery address"
+            return
+        end
+        
         coupon = @cart.coupon
         discount = @cart.discount_amount
 
@@ -67,9 +78,9 @@ class OrdersController < ApplicationController
                 status: "pending",
                 coupon: coupon,
                 discount_amount: discount,
-                shipping_name: shipping_params[:shipping_name],
-                shipping_phone: shipping_params[:shipping_phone],
-                shipping_address: shipping_params[:shipping_address]
+                shipping_name: selected_address.name,
+                shipping_phone: selected_address.phone,
+                shipping_address: selected_address.address_line
                 )
         @cart.cart_items.each do |item|
             order.order_items.create!(
@@ -86,6 +97,7 @@ class OrdersController < ApplicationController
         coupon&.increment!(:usage_count)
         @cart.cart_items.destroy_all
         @cart.update(coupon: nil)
+        session[:checkout_address_id] = nil
         redirect_to order_success_path(store_id: current_store.id), notice: "Order created successfully!"
                 
     end

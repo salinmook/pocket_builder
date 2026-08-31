@@ -1,0 +1,43 @@
+<%= form_with model: [@store, address], url: address.persisted? ? store_address_path(@store, address) : store_addresses_path(@store), local: true do |f| %>
+    <% if address.errors.any? %>
+    <div style="color:red;">
+        <ul>
+            <% address.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <%end %>
+        </ul>
+    </div>
+<% end %>
+
+<%= hidden_field_tag :checkout, params[:checkout] if params[:checkout].present? %>
+    <p>
+    <%= f.label :label, "Label (e.g Home, Work)" %><br>
+    <%= f.text_field :label %>
+    </p>
+
+    <p>
+    <%= f.label :name, "Full Name" %><br>
+    <%= f.text_field :name %>
+    </p>
+
+    <p>
+    <%= f.label :phone %><br>
+    <%= f.text_field :phone %>
+    </p>
+
+    <p>
+    <%= f.label :address_line, "Address" %><br>
+    <%= f.text_area :address_line, row: 4 %>
+    </p>
+
+    <p>
+    <%= f.label :is_default, "Set as default address" %>
+    <%= f.check_box :is_default %>
+    <p>
+
+    <%= f.submit "Save Address" %>
+<% end %>
+
+
+
+        

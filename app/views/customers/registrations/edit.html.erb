@@ -1,0 +1,56 @@
+<h2>My profile</h2>
+<% if  @customer.avatar.attached? %>
+    <%= image_tag @customer.avatar, width: 100, style: "border-radius:50%;" %>
+<% else %>
+    <%= image_tag "default_avatar.png", width: 100, style: "border-radius:50%;" %>
+<% end %>
+
+<% if @customer.errors.any? %>
+    <div style="color:red;">
+        <ul>
+            <% @customer.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>
+
+<%= form_with model: @customer, url: store_customer_path(@store),
+method: :patch, local: true do |f| %>
+    <p>
+        <%= f.label :name %><br>
+        <%= f.text_field :name %>
+    </p>
+    <p>
+        <%= f.label :email %><br>
+        <%= f.email_field :email %>
+    </p>
+    
+    <p>
+        <%= f.label :avatar, "profile Picture" %><br>
+        <%= f.file_field :avatar %>
+    </p>
+
+    <hr>
+    <p><em>Leave password blank if you don't want to change it</em></p>
+    <p>
+        <%= f.label :password, "New Password" %><br>
+        <%= f.password_field :password %>
+    </p>
+    <p>
+        <%= f.label :password_confirmation %><br>
+        <%= f.password_field :password_confirmation %>
+    </p>
+    <p>
+        <%= f.label :current_password %> <em>(required to change password)</em><br>
+        <%= f.password_field :current_password %>
+    </p>
+    <%= f.submit "Save Changes" %>
+<% end %>
+
+<hr>
+<%= link_to "My Orders", orders_path %> |
+<%= link_to "My Addresses", store_addresses_path(@store) %> |
+<%= link_to "Cart", cart_path(current_cart) %> |
+<%= button_to "Logout", store_destroy_customer_session_path(@store),
+method: :delete, style: "display:inline;" %>

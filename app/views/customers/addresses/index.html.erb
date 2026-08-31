@@ -1,0 +1,37 @@
+<h2><%= @checkout_mode ? "Choose Delivery Address" : "My Address" %> </h2>
+
+<%= link_to "Add New Address", new_store_address_path(@store, checkout: @checkout_mode) %>
+
+<hr>
+<% @addresses.each do |address| %>
+    <div style="border:1px solid #ddd; padding:15px; margin-bottom:10px;">
+        <% if address.is_default? %>
+            <strong style="color:green;">Default Address</strong><br>
+        <% end %>
+        <% if address.label.present? %>
+            <strong><%= address.label %></strong><br>
+        <% end %>
+        <p><%= address.name %></p>
+        <p><%= address.phone %></p>
+        <p><%= address.address_line %></p>
+
+        <% if @checkout_mode %>
+            <%= button_to "Deliver to this address", select_store_address_path(@store, address), method: :post %>
+        <% end %>
+
+        <%= link_to "Edit", edit_store_address_path(@store, address) %>
+        <%= button_to "Delete", store_address_path(@store, address), method: :delete,
+            data: { turbo_confirm: "Delete this address?" } %>
+    </div>
+<% end %>
+
+<% if @addresses.empty? %>
+    <p>You haven't added any addresses yet.</p>
+<% end %>
+
+<hr>
+<% if @checkout_mode %>
+    <%= link_to "Back to Checkout", new_checkout_path %>
+<% else %>
+    <%= link_to "Back to Profile", store_edit_customer_registration_path(@store) %>
+<% end %>

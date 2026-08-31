@@ -10,7 +10,7 @@
 <tr>
     <td><%= customer.email.split("@").first %></td>
     <td><%= customer.email %></td>
-    <th><%= @store.orders.where(user: customer).count %></td>
+    <td><%= @store.orders.where(customer: customer).count %></td>
 </tr>
 <% end %>
 </table>
