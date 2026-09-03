@@ -1,14 +1,15 @@
 <h1>My Stores</h1>
+<%= link_to "My profile", edit_user_registration_path %> |
+<%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete } %>
+<hr>
+
 <% @stores.each do |store| %>
     <div>
         <h3><%= store.name %></h3>
         <%= link_to "View Store", store_path(store) %>
-        <%= link_to "dashboard", store_dashboard_path(store) %>
+        <%= link_to "Dashboard", store_dashboard_path(store) %>
         <%= link_to "Edit", edit_store_path(store) %>
     </div>
+<% end %>
 
-    <% end %>
-
-    
-
-    <%= link_to "Create Store", new_store_path %>
+<%= link_to "Create Store", new_store_path %>

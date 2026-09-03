@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Account -BoPla</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+</head>
+<body>
+<h1>BoPla</h1>
+<p style="color:gray;">My Account - applies across all your stores</p>
+<nav>
+<%= link_to "My stores", stores_path %> |
+<%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete } %>
+</nav>
+<hr>
+<% if notice %>
+    <p style="color:green;"><%= notice %></p>
+<% end %>
+<%= yield %>
+<hr>
+<%= link_to "Back to My Stores", stores_path %>
+</body>
+</html>

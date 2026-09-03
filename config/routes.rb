@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get "dashboard/index"
   get "carts/show"
   get "pages/home"
-  devise_for :users
+  devise_for :users, controllers: { registrations: "users/registrations" }
   devise_for :customers, skip: :all
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -33,7 +33,8 @@
   <% end %>
 
   <% if (controller_name == "stores" && ["show", "about", "contact", "faq"].include?(action_name)) ||
-  ["products", "categories", "cart_items", "carts", "orders", "addresses", "registrations", "sessions"].include?(controller_name) %>
+  ["products", "categories", "cart_items", "carts", "orders"].include?(controller_name) ||
+  ["customers/address", "customers/registrations", "customers/sessions"].include?(controller_path) %>
     <%= render "shared/navbar" if current_store.present? %>
   <% end %>
     <%= yield %>

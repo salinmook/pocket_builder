@@ -24,8 +24,15 @@
 Messages |
 Reviews |
 Settings|
-<%= link_to "View Shop", store_path(@store), target: "_blank" %>
-
+<%= link_to "View Shop", store_path(@store), target: "_blank" %> |
+<details style="display:inline-block; position:relative;">
+    <summary style="cursor:pointer; display:inline-block;">Account</summary>
+    <div style="position:absolute; top:100%; right:0; background:white; border: 1px solid #ccc; padding:8px; z-index:10; white-space:nowrap:">
+        <div><%= link_to "my profile", edit_user_registration_path %></div>
+        <div><%= link_to "Back to My Stores", stores_path %></div>
+        <div><%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete } %></div>
+    </div>
+</details>
 </nav>
 <hr>
 
