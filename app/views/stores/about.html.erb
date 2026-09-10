@@ -1,2 +1,14 @@
-<h1>About<%= @store.name %></h1>
-<p><%= @store.description %></p>
+<h1>About <%= @store.name %></h1>
+<% if @store.about_description.present? %>
+    <p><%= simple_format(@store.about_description) %></p>
+<% else %>
+    <p><%= @store.description %></p>
+<% end %>
+
+<% if @store.about_images.attached? %>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;">
+        <% @store.about_images.each do |image| %>
+            <%= image_tag image, width: 300, style: "border-radius:8px;" %>
+        <% end %>
+    </div>
+<% end %>
