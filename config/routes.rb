@@ -68,6 +68,14 @@ Rails.application.routes.draw do
   get "/stores/:store_id/dashboard/finance",
   to: "dashboard#finance",
   as: "store_dashboard_finance"
+  get "/stores/:store_id/dashboard/settings",
+  to: "dashboard#settings",
+  as: "store_dashboard_settings"
+  patch "/stores/:store_id/dashboard/settings",
+  to: "dashboard#update_settings"
+  delete "/stores/:store_id/dashboard/about_images/:image_id",
+  to: "dashboard#remove_about_image",
+  as: "store_dashboard_remove_about_image"
 
   resources :stores, only: [] do 
     resources :coupons, controller: "dashboard/coupons"

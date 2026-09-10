@@ -80,13 +80,44 @@ class DashboardController < ApplicationController
                      .where.not(orders: { status: "cancelled" })
 
     @revenue = items.sum("order_items.quantity * order_items.price") - 
-               @store.orders.where.not(status: "canceelled").sum(:discount_amount)
+               @store.orders.where.not(status: "cancelled").sum(:discount_amount)
     @shipping_cost = 0
     @promotion_cost = 0
     @refund = 0
     @cost = items.joins(:product).sum("order_items.quantity * products.cost")
     @profit = @revenue - @shipping_cost - @promotion_cost - @refund - @cost
     
+  end
+
+  def settings
+    @store = current_user.stores.find(params[:store_id])
+  end
+
+  def update_settings
+    @store = current_user.stores.find(params[:store_id])
+    if params[:store][:about_images].present? && params[:store][:about_images].any?(&:present?)
+      new_images = params[:store][:about_images].reject(&:blank?)
+      total_after = @store.about_images.count + new_images.count
+      if total_after > 3
+        @store.errors.add(:about_images, "can have at most 3 images total")
+        render :settings, status: :unprocessable_entity
+        return
+      end
+      new_images.each { |img| @store.about_images.attach(img) }
+    end
+
+    if @store.update(settings_params.except(:about_images))
+      redirect_to store_dashboard_settings_path(@store), notice: "Store settings updated"
+    else
+      render :settings, status: :unprocessable_entity
+    end
+  end
+
+  def remove_about_image
+    @store = current_user.stores.find(params[:store_id])
+    image = @store.about_images.find(params[:image_id])
+    image.purge
+    redirect_to store_dashboard_settings_path(@store), notice: "Photo removed"
   end
     
 
@@ -95,5 +126,9 @@ class DashboardController < ApplicationController
 
   def ensure_owner
     redirect_to root_path unless current_user.owner?
+  end
+
+  def settings_params
+    params.require(:store).permit(:about_description, about_images: [])
   end
 end

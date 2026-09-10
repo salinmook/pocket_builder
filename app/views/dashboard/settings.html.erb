@@ -1,0 +1,39 @@
+<h2>Store Settings</h2>
+<% if @store.errors.any? %>
+    <div style="color:red;">
+        <ul>
+            <% @store.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>
+<h3>about</h3>
+<%= form_with model: @store, url: store_dashboard_settings_path(@store), method: :patch, local: true, data: { controller: "image-preview", image_preview_max_value: 3, image_preview_existing_count_value: @store.about_images.count } do |f| %>
+    <p>
+        <%= f.label :about_description, "About Us Description" %><br>
+        <%= f.text_area :about_description, rows: 6 %>
+    </p>
+    <p>Current photos (<%= @store.about_images.count %>/3):</p>
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <% @store.about_images.each do |image| %>
+            <span style="display:inline-block; text-align:center;">
+                <%= image_tag image, width: 150 %><br>
+                <%= link_to "Remove", store_dashboard_remove_about_image_path(@store, image),
+                    data: { turbo_method: :delete, turbo_confirm: "Remove this photo?" } %>
+            </span>
+        <% end %>
+    </div>
+    <hr>
+    <div data-image-preview-target="counter">
+        <%= @store.about_images.count %>/3 photos selected
+    </div>
+    <div data-image-preview-target="previewList" style="display:flex; flex-wrap:wrap; gap:10px; margin:10px 0;"></div>
+    <p data-image-preview-target="addButtonWrapper" <%= "style=display:none;" if @store.about_images.count >= 3 %>>
+        <%= f.label :about_images, "Add a photo" %><br>
+        <input type="file" accept="image/*" data-image-preview-target="fileInput" data-action="change->image-preview#addFile">
+    </p>
+    <%= f.file_field :about_images, multiple: true, style: "display:none;", data: { image_preview_target: "hiddenInput" } %>
+    
+    <%= f.submit "Save Settings" %>
+<% end %>
