@@ -8,6 +8,7 @@ class Store < ApplicationRecord
   has_many :categories, dependent: :destroy
   has_many :coupons, dependent: :destroy
   has_many :customers, dependent: :destroy
+  has_many :locations, dependent: :destroy
   
   validates :name, presence: true
   validate :about_images_limit

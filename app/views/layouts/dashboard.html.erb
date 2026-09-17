@@ -7,6 +7,15 @@
     
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.google_maps_api_key %>&libraries=places&callback=initGoogleMaps" async defer></script>
+<script>
+  window.googleMapsReady = false;
+  window.initGoogleMaps = function() {
+    window.googleMapsReady = true;
+    document.dispatchEvent(new CustomEvent("google-maps-ready"));
+  };
+</script>
+</head>
 </head>
 
 <body>
@@ -24,6 +33,7 @@
 Messages |
 Reviews |
 <%= link_to "Settings", store_dashboard_settings_path(@store) %>|
+<%= link_to "Locations", store_locations_path(@store) %> |
 <%= link_to "View Shop", store_path(@store), target: "_blank" %> |
 <details style="display:inline-block; position:relative;">
     <summary style="cursor:pointer; display:inline-block;">Account</summary>

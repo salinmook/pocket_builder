@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_03_134352) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_12_223025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -117,6 +117,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_134352) do
     t.index ["store_id"], name: "index_customers_on_store_id"
   end
 
+  create_table "locations", force: :cascade do |t|
+    t.text "address", null: false
+    t.datetime "created_at", null: false
+    t.string "label"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.string "phone"
+    t.bigint "store_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_locations_on_store_id"
+  end
+
   create_table "order_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "order_id", null: false
@@ -203,6 +215,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_134352) do
   add_foreign_key "categories", "stores"
   add_foreign_key "coupons", "stores"
   add_foreign_key "customers", "stores"
+  add_foreign_key "locations", "stores"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "coupons"

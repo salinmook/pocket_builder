@@ -1,0 +1,27 @@
+<h2>Store Location</h2>
+<%= link_to "Add New Location", new_store_location_path(@store) %>
+<hr>
+<% @locations.each do |location| %>
+    <div style="border:1px solid #ddd; padding:15Ppx; margin-bottm: 10px;">
+        <% if location.label.present? %>
+            <strong><%= location.label %></strong>
+        <% end %>
+        <p><%= location.address %></p>
+        <% if location.phone.present? %>
+            <p>Phone: <%= location.phone %></p>
+        <% end %>
+        <% if location.latitude.present? && location.longitude.present? %>
+            <p style="color:green;">📍Pinned on map</p>
+        <% else %>
+            <p style="color:orange;">⚠️ No map pin set</p>
+        <% end %>
+
+        <%= link_to "Edit", edit_store_location_path(@store, location) %>
+        <%= button_to "Delete", store_location_path(@store, location), method: :delete,
+            data: { turbo_confirm: "Delete this location?" } %>
+    </div>
+    <% end %>
+
+    <% if @locations.empty? %>
+        <p>No location added yet.</p>
+    <% end %>

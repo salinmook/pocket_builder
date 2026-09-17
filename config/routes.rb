@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         post :select
       end
     end
+    resources :locations, controller: "dashboard/locations"
     devise_scope :customer do 
       get "customer/sign_up", to: "customers/registrations#new", as: :new_customer_registration
       post "customer", to: "customers/registrations#create", as: :customer_registration
