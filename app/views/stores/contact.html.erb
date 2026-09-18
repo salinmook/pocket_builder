@@ -1,1 +1,41 @@
-<h1>Contact Us</h1>
+<h1>Contact <%= @store.name %></h1>
+<% if @store.address.present? || @store.phone.present? %>
+    <p>
+    <% if @store.address.present? %>
+        <%= @store.address %><br>
+    <% end %>
+    <% if @store.phone.present? %>
+        Phone:<%= @store.phone %>
+    <% end %>
+    </p>
+    <hr>
+<% end %>
+
+<% if @store.locations.any? %>
+<h2>Our Locations</h2>
+    <% @store.locations.each do |location| %>
+        <div style="margin-bottom:30px;">
+            <% if location.label.present? %>
+            <h3><%= location.label %></h3>
+            <% end %>
+
+            <p><%= location.address %></p>
+            <% if location.phone.present? %>
+                <p>Phone: <%= location.phone %></p>
+            <% end %>
+
+            <% if location.latitude.present? && location.longitude.present? %>
+                <div data-controller="google-map-view"
+                    data-google-map-view-lat-value="<%= location.latitude %>"
+                    data-google-map-view-lng-value="<%= location.longitude %>"
+                    data-google-map-view-target="map"
+                    style="width:100%; height:300px; border:1px solid #ccc;"></div>
+            <% end %>
+        </div>
+    <% end %>
+<% else %>
+    <p>No location added yet.</p>
+<% end %>
+        
+
+
