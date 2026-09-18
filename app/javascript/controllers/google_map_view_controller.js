@@ -11,7 +11,7 @@ export default class extends Controller {
             document.addEventListener("google-maps-ready", () => this.initMap(), { once: true })
         }
     }
-    initmap() {
+    initMap() {
         const map = new google.maps.Map(this.mapTarget, {
             center: { lat: this.latValue, lng: this.lngValue },
             zoom: 15
